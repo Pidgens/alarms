@@ -17,7 +17,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         MainActivity inst = MainActivity.instance();
-        Log.i("ALARM", "SHOULD RING");
+        Log.i("ALARM", "SHOULD RING!!");
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
