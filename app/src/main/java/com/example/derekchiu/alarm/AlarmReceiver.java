@@ -14,19 +14,37 @@ import android.util.Log;
  * Created by derekchiu on 12/29/15.
  */
 public class AlarmReceiver extends WakefulBroadcastReceiver {
+
+    final int timer = 15;
+
     @Override
     public void onReceive(Context context, Intent intent) {
+
         MainActivity inst = MainActivity.instance();
         Log.i("ALARM", "SHOULD RING!!");
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
+        final Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         ringtone.play();
-
+        final Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        sleep(15000);
+                        ringtone.stop();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
         ComponentName componentName = new ComponentName(context.getPackageName(), AlarmService.class.getName());
         startWakefulService(context, (intent.setComponent(componentName)));
         setResultCode(Activity.RESULT_OK);
+
     }
 }

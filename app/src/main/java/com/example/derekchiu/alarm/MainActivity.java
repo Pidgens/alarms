@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     public void onToggle(View view) {
         // if alarm on
         if (((ToggleButton) view).isChecked()) {
+            ((ToggleButton) view).setText("ALARM: ON");
+            ((ToggleButton) view).setTextColor(Color.GREEN);
             Calendar calendar = Calendar.getInstance();
             if (androidAPI > Build.VERSION_CODES.LOLLIPOP_MR1) {
                 calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
@@ -63,10 +66,13 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Log.i("API", "API ERROR");
             }
+            // Check calendar time
             Intent newIntent = new Intent(MainActivity.this, AlarmReceiver.class);
             pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, newIntent,0);
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         } else {
+            ((ToggleButton) view).setText("ALARM: OFF");
+            ((ToggleButton) view).setTextColor(Color.RED);
             alarmManager.cancel(pendingIntent);
         }
     }
