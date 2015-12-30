@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ToggleButton toggleButton;
     private static MainActivity inst;
     private TextView alarmStatus;
+    private boolean togggled;
 
     private int androidAPI = Build.VERSION.SDK_INT;
 
@@ -56,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.M)
     public void onToggle(View view) {
         // if alarm on
+        togggled = false;
         if (((ToggleButton) view).isChecked()) {
+            togggled = true;
             ((ToggleButton) view).setText("ALARM: ON");
             ((ToggleButton) view).setTextColor(Color.GREEN);
             Calendar calendar = Calendar.getInstance();
@@ -68,11 +71,16 @@ public class MainActivity extends AppCompatActivity {
             }
             // Check calendar time
             Intent newIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+            newIntent.putExtra("toggled", togggled);
             pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, newIntent,0);
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         } else {
             ((ToggleButton) view).setText("ALARM: OFF");
             ((ToggleButton) view).setTextColor(Color.RED);
+            Intent newIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+            newIntent.putExtra("toggled", togggled);
+            pendingIntent = PendingIntent.getBroadcast(this, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.set(AlarmManager.RTC, 0, pendingIntent);
             alarmManager.cancel(pendingIntent);
         }
     }

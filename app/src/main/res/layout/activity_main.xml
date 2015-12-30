@@ -12,7 +12,8 @@
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alarm Off"
+        android:textOff="ALARM: OFF"
+        android:textOn="ALARM: ON"
         android:id="@+id/toggleButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
