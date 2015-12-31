@@ -26,13 +26,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        Log.i("CONTEXT", String.valueOf(intent.getExtras().getBoolean("toggled")));
         final boolean toggled = intent.getExtras().getBoolean("toggled");
         final Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        if (!toggled) {
-            ringtone.stop();
-            return;
-        }
         if (!ringtone.isPlaying()) {
             ringtone.play();
         }

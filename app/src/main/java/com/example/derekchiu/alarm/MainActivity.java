@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -52,6 +54,46 @@ public class MainActivity extends AppCompatActivity {
         iterate = (EditText) findViewById(R.id.iterated);
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        iterate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals("")) {
+                    int minutes;
+                    int hours;
+                    String next;
+                    if (androidAPI > Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        minutes = Integer.valueOf(s.toString()) + timePicker.getMinute();
+                        hours = timePicker.getHour();
+//                        Log.i("I", String.valueOf(i));
+                    }
+                    else {
+                        minutes = Integer.valueOf(s.toString()) + timePicker.getCurrentMinute();
+                        hours = timePicker.getCurrentHour();
+//                        Log.i("I2", String.valueOf(i));
+                    }
+                    // more than an hour
+                    if (minutes > 59) {
+                        minutes = (minutes % 60);
+                        hours += 1;
+                    }
+                    hours = hours % 12;
+                    next = String.valueOf(hours) + " : " + String.valueOf(minutes);
+                    nextAlarm.setText(next);
+                }
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -75,12 +117,9 @@ public class MainActivity extends AppCompatActivity {
             pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, newIntent,0);
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         } else {
+            Log.i("STATUS", "OFF");
             ((ToggleButton) view).setText("ALARM: OFF");
             ((ToggleButton) view).setTextColor(Color.RED);
-            Intent newIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-            newIntent.putExtra("toggled", togggled);
-            pendingIntent = PendingIntent.getBroadcast(this, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.set(AlarmManager.RTC, 0, pendingIntent);
             alarmManager.cancel(pendingIntent);
         }
     }
