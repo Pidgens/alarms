@@ -29,6 +29,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         final boolean toggled = intent.getExtras().getBoolean("toggled");
         final Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         if (!ringtone.isPlaying()) {
+            Log.i("RINGTONE IS PLAYING", "START");
             ringtone.play();
         }
         final Thread thread = new Thread() {
@@ -36,8 +37,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             public void run() {
                     if (toggled) {
                         try {
-                            sleep(15000);
+                            sleep(10000);
                             ringtone.stop();
+                            Log.i("RINGTONE IS NOT PLAYING", "STOP");
+
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

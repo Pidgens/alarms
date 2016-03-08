@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private static MainActivity inst;
     private TextView alarmStatus;
     private boolean togggled;
+    private int alarm_minute;
+    private int hour;
 
     private int androidAPI = Build.VERSION.SDK_INT;
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         inst = this;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
         iterate = (EditText) findViewById(R.id.iterated);
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                alarm_minute = minute;
+                hour = hourOfDay;
+            }
+        });
 
         iterate.addTextChangedListener(new TextWatcher() {
             @Override
@@ -70,50 +81,67 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!s.toString().equals("")) {
-                    int minutes;
-                    int hours;
                     String next;
                     if (androidAPI > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        minutes = Integer.valueOf(s.toString()) + timePicker.getMinute();
-                        hours = timePicker.getHour();
+                        alarm_minute = Integer.valueOf(s.toString()) + timePicker.getMinute();
+                        hour = timePicker.getHour();
 //                        Log.i("I", String.valueOf(i));
                     }
                     else {
-                        minutes = Integer.valueOf(s.toString()) + timePicker.getCurrentMinute();
-                        hours = timePicker.getCurrentHour();
+                        alarm_minute = Integer.valueOf(s.toString()) + timePicker.getCurrentMinute();
+                        hour = timePicker.getCurrentHour();
 //                        Log.i("I2", String.valueOf(i));
                     }
                     // more than an hour
-                    if (minutes > 59) {
-                        minutes = (minutes % 60);
-                        hours += 1;
+                    if (alarm_minute > 59) {
+                        alarm_minute = (alarm_minute % 60);
+                        hour += 1;
                     }
-                    hours = hours % 12;
-                    next = String.valueOf(hours) + " : " + String.valueOf(minutes);
+                    hour = hour % 12;
+                    next = String.valueOf(hour) + " : " + String.valueOf(alarm_minute);
                     nextAlarm.setText(next);
                 }
             }
         });
     }
 
+    // TIME IS NOT SET CORRECTLY.
     @TargetApi(Build.VERSION_CODES.M)
     public void onToggle(View view) {
         // if alarm on
+        timePicker = (TimePicker) findViewById(R.id.timePicker);
+//        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+//            @Override
+//            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+//                alarm_minute = minute;
+//                hour = hourOfDay;
+//            }
+//        });
+
         togggled = false;
         if (((ToggleButton) view).isChecked()) {
             togggled = true;
             ((ToggleButton) view).setText("ALARM: ON");
             ((ToggleButton) view).setTextColor(Color.GREEN);
             Calendar calendar = Calendar.getInstance();
-            if (androidAPI > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-                calendar.set(Calendar.MINUTE, timePicker.getMinute());
+
+            Log.i("API SHIT 1", String.valueOf(androidAPI));
+            Log.i("API SHIT 2", String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            if (androidAPI >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE, alarm_minute);
+                Log.i("TIME PICKER MINUTE", String.valueOf(alarm_minute));
+
             } else {
                 Log.i("API", "API ERROR");
             }
+            Log.i("CALENDAR MILLSECONDS", String.valueOf(calendar.getTimeInMillis()));
+            Log.i("CALENDAR CURRENT HOUR", String.valueOf(calendar.getTime().getHours()));
+            Log.i("CALENDAR CURRENT MINUTE", String.valueOf(calendar.getTime().getMinutes()));
             // Check calendar time
             Intent newIntent = new Intent(MainActivity.this, AlarmReceiver.class);
             newIntent.putExtra("toggled", togggled);
+            Log.i("TOGGLED", String.valueOf(togggled));
             pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0, newIntent,0);
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         } else {
