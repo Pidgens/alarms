@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean togggled;
     private int alarm_minute;
     private int hour;
+    private Calendar nextCalendar;
 
     private int androidAPI = Build.VERSION.SDK_INT;
 
@@ -85,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
                     if (androidAPI > Build.VERSION_CODES.LOLLIPOP_MR1) {
                         alarm_minute = Integer.valueOf(s.toString()) + timePicker.getMinute();
                         hour = timePicker.getHour();
-//                        Log.i("I", String.valueOf(i));
+                        Log.i("ON TEXT CHANGE", String.valueOf(alarm_minute));
+                        Log.i("ON TEXT CHANGE", String.valueOf(hour));
                     }
                     else {
                         alarm_minute = Integer.valueOf(s.toString()) + timePicker.getCurrentMinute();
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                     hour = hour % 12;
                     next = String.valueOf(hour) + " : " + String.valueOf(alarm_minute);
                     nextAlarm.setText(next);
+                    nextCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                    nextCalendar.set(Calendar.MINUTE, alarm_minute);
                 }
             }
         });
@@ -110,13 +114,6 @@ public class MainActivity extends AppCompatActivity {
     public void onToggle(View view) {
         // if alarm on
         timePicker = (TimePicker) findViewById(R.id.timePicker);
-//        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-//            @Override
-//            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-//                alarm_minute = minute;
-//                hour = hourOfDay;
-//            }
-//        });
 
         togggled = false;
         if (((ToggleButton) view).isChecked()) {
@@ -138,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("CALENDAR MILLSECONDS", String.valueOf(calendar.getTimeInMillis()));
             Log.i("CALENDAR CURRENT HOUR", String.valueOf(calendar.getTime().getHours()));
             Log.i("CALENDAR CURRENT MINUTE", String.valueOf(calendar.getTime().getMinutes()));
+
             // Check calendar time
             Intent newIntent = new Intent(MainActivity.this, AlarmReceiver.class);
             newIntent.putExtra("toggled", togggled);

@@ -30,7 +30,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         final Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         if (!ringtone.isPlaying()) {
             Log.i("RINGTONE IS PLAYING", "START");
+            Intent patternIntent = new Intent(MainActivity.instance(), PatternActivity.class);
             ringtone.play();
+            
         }
         final Thread thread = new Thread() {
             @Override
