@@ -19,9 +19,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         MainActivity inst = MainActivity.instance();
-        Log.i("ALARM", "SHOULD RING!!");
+        Intent patternIntent = new Intent(inst, PatternActivity.class);
+        patternIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        Log.i("ALARM", "SHOULD RING!!");
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -30,9 +31,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         final Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         if (!ringtone.isPlaying()) {
             Log.i("RINGTONE IS PLAYING", "START");
-            Intent patternIntent = new Intent(MainActivity.instance(), PatternActivity.class);
             ringtone.play();
-            
+            context.startActivity(patternIntent);
+
         }
         final Thread thread = new Thread() {
             @Override
