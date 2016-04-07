@@ -21,7 +21,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     private TextView val1;
     private TextView val2;
     private EditText inputVal;
-    final int timer = 15;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -29,9 +28,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         val1 = (TextView) inst.findViewById(R.id.val1);
         val2 = (TextView) inst.findViewById(R.id.val2);
         inputVal = (EditText) inst.findViewById(R.id.inputVal);
-//        Intent patternIntent = new Intent(inst, PatternActivity.class);
-//        patternIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        Log.i("ALARM", "SHOULD RING!!");
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -41,7 +37,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         if (!ringtone.isPlaying()) {
             Log.i("RINGTONE IS PLAYING", "START");
             ringtone.play();
-//            context.startActivity(patternIntent);
             val1.setVisibility(View.VISIBLE);
             val2.setVisibility(View.VISIBLE);
             inputVal.setVisibility(View.VISIBLE);
