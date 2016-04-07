@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -34,6 +36,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         MainActivity inst = MainActivity.instance();
+
+        AudioManager manager = (AudioManager) inst.getSystemService(Context.AUDIO_SERVICE);
+        manager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 100, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
+
         toggleButton = (ToggleButton) inst.findViewById(R.id.toggleButton);
         val1 = (TextView) inst.findViewById(R.id.val1);
         val2 = (TextView) inst.findViewById(R.id.val2);
@@ -54,33 +60,22 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
         final int endVal = i1 + i2;
 
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        final boolean toggled = intent.getExtras().getBoolean("toggled");
-//        final Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         inputVal.setText(String.valueOf(0));
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         final MediaPlayer player = MediaPlayer.create(inst, notification);
         player.setLooping(true);
         player.start();
-//        ringtone.play();
+
         if (isRinging) {
             inputVal.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                 }
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-
-
                 }
-
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (!inputVal.getText().toString().equals("")) {
@@ -90,6 +85,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                         if (myValue == endVal) {
                             isRinging = false;
                             toggleButton.setChecked(false);
+                            toggleButton.setText("ALARM: OFF");
+                            toggleButton.setTextColor(Color.RED);
                             player.stop();
                         }
                     }
