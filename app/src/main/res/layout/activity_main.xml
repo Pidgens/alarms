@@ -33,50 +33,32 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Every: "
-        android:id="@+id/textView"
-        android:textSize="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/val1"
+        android:visibility="invisible"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/nextAlarm"
-        android:layout_toStartOf="@+id/nextAlarm" />
+        android:layout_centerHorizontal="true"
+    />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/val2"
+        android:layout_below="@+id/val1"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/iterated"
-        android:gravity="center"
-        android:layout_alignTop="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_alignRight="@+id/toggleButton"
-        android:layout_alignEnd="@+id/toggleButton"
-        android:singleLine="true"
-        android:inputType="number"
-        android:textSize="20dp"
-        android:hint="Input Minutes"
-        android:layout_marginTop="-15dp" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:visibility="invisible"
+        android:id="@+id/inputVal"
+        android:layout_below="@+id/val2"
+        android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next Alarm At:"
-        android:id="@+id/textView3"
-        android:textSize="20dp"
-        android:layout_marginTop="44dp"
-        android:layout_below="@+id/iterated"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/nextAlarm"
-        android:layout_alignParentEnd="true"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="20dp"
-        android:layout_alignTop="@+id/textView3"
-        android:layout_toRightOf="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3" />
 </RelativeLayout>

@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -54,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         timePicker = (TimePicker) findViewById(R.id.timePicker);
-        nextAlarm = (TextView) findViewById(R.id.nextAlarm);
-        iterate = (EditText) findViewById(R.id.iterated);
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -67,46 +63,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        iterate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @TargetApi(Build.VERSION_CODES.M)
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().equals("")) {
-                    String next;
-                    if (androidAPI > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        alarm_minute = Integer.valueOf(s.toString()) + timePicker.getMinute();
-                        hour = timePicker.getHour();
-                        Log.i("ON TEXT CHANGE", String.valueOf(alarm_minute));
-                        Log.i("ON TEXT CHANGE", String.valueOf(hour));
-                    }
-                    else {
-                        alarm_minute = Integer.valueOf(s.toString()) + timePicker.getCurrentMinute();
-                        hour = timePicker.getCurrentHour();
-//                        Log.i("I2", String.valueOf(i));
-                    }
-                    // more than an hour
-                    if (alarm_minute > 59) {
-                        alarm_minute = (alarm_minute % 60);
-                        hour += 1;
-                    }
-                    hour = hour % 12;
-                    next = String.valueOf(hour) + " : " + String.valueOf(alarm_minute);
-                    nextAlarm.setText(next);
-                    nextCalendar.set(Calendar.HOUR_OF_DAY, hour);
-                    nextCalendar.set(Calendar.MINUTE, alarm_minute);
-                }
-            }
-        });
     }
 
     // TIME IS NOT SET CORRECTLY.
