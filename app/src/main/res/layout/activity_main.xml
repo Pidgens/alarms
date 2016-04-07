@@ -61,6 +61,7 @@
         android:visibility="invisible"
         android:id="@+id/inputVal"
         android:layout_below="@+id/val2"
+        android:imeOptions="actionDone"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

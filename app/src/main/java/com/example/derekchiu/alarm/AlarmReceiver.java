@@ -8,6 +8,9 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,7 +52,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         int i2 = r2.nextInt(500-100) + 100;
         val2.setText(Integer.toString(i2));
 
-        int endVal = i1 + i2;
+        final int endVal = i1 + i2;
 
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
@@ -60,18 +63,38 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         inputVal.setText(String.valueOf(0));
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        MediaPlayer player = MediaPlayer.create(inst, notification);
+        final MediaPlayer player = MediaPlayer.create(inst, notification);
         player.setLooping(true);
         player.start();
 //        ringtone.play();
         if (isRinging) {
-//            Log.i("RINGTONE IS PLAYING", "START");
-            myValue = Integer.valueOf(inputVal.getText().toString());
-            if (myValue == endVal) {
-                isRinging = false;
-                toggleButton.setChecked(false);
-                player.stop();
-            }
+            inputVal.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!inputVal.getText().toString().equals("")) {
+                        myValue = Integer.valueOf(inputVal.getText().toString());
+                        Log.i("ENDVALUE", String.valueOf(endVal));
+                        Log.i("MYVALUE", String.valueOf(myValue));
+                        if (myValue == endVal) {
+                            isRinging = false;
+                            toggleButton.setChecked(false);
+                            player.stop();
+                        }
+                    }
+                }
+            });
         }
 
         ComponentName componentName = new ComponentName(context.getPackageName(), AlarmService.class.getName());
