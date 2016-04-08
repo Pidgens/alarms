@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Alarm</string>
+
+    <string-array name="operations">
+        <item>+</item>
+        <item>-</item>
+        <item>×</item>
+        <item>÷</item>
+    </string-array>
+
 </resources>

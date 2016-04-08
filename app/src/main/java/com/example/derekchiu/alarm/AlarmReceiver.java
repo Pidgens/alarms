@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -25,8 +26,8 @@ import java.util.Random;
  */
 public class AlarmReceiver extends WakefulBroadcastReceiver {
 
-    private TextView val1;
-    private TextView val2;
+    private TextView val1, val2, operation;
+    private Spinner operationSpinner;
     private EditText inputVal;
     private boolean isRinging = false;
     private ToggleButton toggleButton;
@@ -44,6 +45,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         val1 = (TextView) inst.findViewById(R.id.val1);
         val2 = (TextView) inst.findViewById(R.id.val2);
         inputVal = (EditText) inst.findViewById(R.id.inputVal);
+        operation = (TextView) inst.findViewById(R.id.operation);
+        operationSpinner = (Spinner) inst.findViewById(R.id.operationSpinner);
+
         isRinging = true;
         myValue = 0;
         val1.setVisibility(View.VISIBLE);
@@ -58,9 +62,28 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         int i2 = r2.nextInt(500-100) + 100;
         val2.setText(Integer.toString(i2));
 
-        final int endVal = i1 + i2;
+        String operationString = operation.getText().toString();
+        int endValIntermediate = 0;
+        switch (operationString)
+        {
+            case "+":
+                endValIntermediate = i1 + i2;
+                break;
+            case "-":
+                endValIntermediate = i1 - i2;
+                break;
+            case "×":
+                endValIntermediate = i1 * i2;
+                break;
+            case "÷":
+                endValIntermediate = i1 / i2;
+                break;
 
-        inputVal.setText(String.valueOf(0));
+        }
+        final int endVal = endValIntermediate;
+
+
+        inputVal.setText("");
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         final MediaPlayer player = MediaPlayer.create(inst, notification);

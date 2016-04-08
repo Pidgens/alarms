@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
@@ -21,12 +23,11 @@ public class MainActivity extends AppCompatActivity {
 
     private AlarmManager alarmManager;
     private TimePicker timePicker;
-    private TextView nextAlarm;
-    private EditText iterate;
+    private Spinner operationSpinner;
     private PendingIntent pendingIntent;
     private ToggleButton toggleButton;
     private static MainActivity inst;
-    private TextView alarmStatus;
+    private TextView val1, val2, inputVal, operation;
     private boolean togggled;
     private int alarm_minute;
     private int hour;
@@ -53,6 +54,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         timePicker = (TimePicker) findViewById(R.id.timePicker);
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        operationSpinner = (Spinner) findViewById(R.id.operationSpinner);
+        operation = (TextView) findViewById(R.id.operation);
+        val1 = (TextView) findViewById(R.id.val1);
+        val2 = (TextView) findViewById(R.id.val2);
+        inputVal = (TextView) findViewById(R.id.inputVal);
+
+//        val1.setVisibility(View.INVISIBLE);
+//        val2.setVisibility(View.INVISIBLE);
+//        inputVal.setVisibility(View.INVISIBLE);
+//        operation.setVisibility(View.INVISIBLE);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.operations, R.layout.my_spinner_textview);
+        adapter.setDropDownViewResource(R.layout.my_spinner_textview);
+        operationSpinner.setAdapter(adapter);
+
+        operationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                operation.setText(operationSpinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
+
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
