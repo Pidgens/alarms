@@ -55,11 +55,11 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         inputVal.setVisibility(View.VISIBLE);
 
         Random r1 = new Random();
-        int i1 = r1.nextInt(500-100) + 100;
+        int i1 = r1.nextInt(10000-1000) + 1000;
         val1.setText(Integer.toString(i1));
 
         Random r2 = new Random();
-        int i2 = r2.nextInt(500-100) + 100;
+        int i2 = r2.nextInt(10000-1000) + 1000;
         val2.setText(Integer.toString(i2));
 
         String operationString = operation.getText().toString();
